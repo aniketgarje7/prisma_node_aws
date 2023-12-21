@@ -21,6 +21,8 @@
 - Express JS
 - NeonDB
 
+
+## Design Decisions 
 ### Backend Development:
 Node.js: Chosen for its efficiency, scalability, and suitability for real-time file operations and I/O-intensive tasks.
 Express.js: Provides a lightweight and flexible framework for structuring APIs, routing, and middleware, promoting rapid development.
