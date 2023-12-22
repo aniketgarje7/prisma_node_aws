@@ -7,6 +7,8 @@ const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const app = express();
 const prisma = new PrismaClient();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 async function main() {
   app.use(express.json());
@@ -23,7 +25,8 @@ async function main() {
   app.use("/auth", authRoutes);
   app.use("/file", fileRoutes);
   app.use("/folder", folderRoutes);
-  
+  // api documentetion
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(PORT, () => {
     console.log("server running on " + PORT);
   });

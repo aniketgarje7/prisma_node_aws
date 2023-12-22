@@ -1,0 +1,405 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Propacity Assignment API ",
+        "description": "Here API's created for authentication and file management system.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/auth/signin": {
+            "post": {
+                "summary": "Create a new user",
+                "description": "Creates a new user account in the system.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User created successfully"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "summary": "Authenticate a user",
+                "description": "Logs in a user and returns an authentication token if successful.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid email or password"
+                    }
+                }
+            }
+        },
+        "/folder/create": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "x-propacity"
+                        ]
+                    }
+                ],
+                "summary": "Create a new folder",
+                "description": "Creates a new folder with the given name, optionally within a specified parent folder.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateFolderRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Folder created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid request data"
+                    },
+                    "404": {
+                        "description": "Parent folder not found (if parentId is provided)"
+                    }
+                }
+            }
+        },
+        "/file/create/{folderId}": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "x-propacity"
+                        ]
+                    }
+                ],
+                "summary": "Upload a file to a folder",
+                "description": "Uploads a file with the given name to the specified folder.",
+                "parameters": [
+                    {
+                        "name": "folderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "The file to upload"
+                                    }
+                                },
+                                "required": [
+                                    "file"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File uploaded successfully"
+                    },
+                    "400": {
+                        "description": "Invalid request data"
+                    },
+                    "404": {
+                        "description": "Folder not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/file/update/{fileId}": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "x-propacity"
+                        ]
+                    }
+                ],
+                "summary": "Update the name of a file",
+                "description": "Changes the name of a file with the specified ID.",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The new name for the file"
+                                    }
+                                },
+                                "required": [
+                                    "name"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File name updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid request data"
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                }
+            }
+        },
+        "/file/move/{fileId}": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "x-propacity"
+                        ]
+                    }
+                ],
+                "summary": "Move a file to a different folder",
+                "description": "Changes the folder of a file with the specified ID.",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "folderId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "description": "The ID of the new folder"
+                                    }
+                                },
+                                "required": [
+                                    "folderId"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File moved successfully"
+                    },
+                    "400": {
+                        "description": "Invalid request data"
+                    },
+                    "404": {
+                        "description": "File or folder not found"
+                    }
+                }
+            }
+        },
+        "/file/delete/{fileId}": {
+            "delete": {
+                "security": [
+                    {
+                        "bearerAuth": [
+                            "x-propacity"
+                        ]
+                    }
+                ],
+                "summary": "Delete a file",
+                "description": "Deletes a file with the specified ID.",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "File deleted successfully"
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "examplepassword"
+                    },
+                    "confirm_password": {
+                        "type": "string",
+                        "example": "examplepassword"
+                    }
+                },
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "confirm_password"
+                ]
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CreateFolderRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the folder to create"
+                    },
+                    "parentId": {
+                        "type": "string",
+                        "format": "number",
+                        "description": "The ID of the parent folder (optional)"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "FileUploadRequest": {
+                "type": "object",
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The file to upload"
+                    }
+                },
+                "required": [
+                    "file"
+                ]
+            },
+            "UpdateFileRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The new name for the file"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "MoveFileRequest": {
+                "type": "object",
+                "properties": {
+                    "folderId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "The ID of the new folder"
+                    }
+                },
+                "required": [
+                    "folderId"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
