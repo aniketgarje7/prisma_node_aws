@@ -21,6 +21,8 @@
 - Express JS
 - NeonDB
 
+### API Document
+ -Use /api-docs route for api details.
 
 ## Design Decisions 
 ### Backend Development:
@@ -50,3 +52,4 @@ Community support: Node.js, Express.js, and PostgreSQL have large and active com
 ### Additional Benefits:
 Clear project structure: Separation of concerns promotes readability and maintainability.
 Potential for serverless architecture: AWS integration allows for exploring serverless functions for further scalability and cost optimization.
+
