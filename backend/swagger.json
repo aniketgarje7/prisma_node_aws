@@ -60,9 +60,7 @@
             "post": {
                 "security": [
                     {
-                        "bearerAuth": [
-                            "x-propacity"
-                        ]
+                        "ApiKeyAuth": [] 
                     }
                 ],
                 "summary": "Create a new folder",
@@ -93,9 +91,7 @@
             "post": {
                 "security": [
                     {
-                        "bearerAuth": [
-                            "x-propacity"
-                        ]
+                        "ApiKeyAuth": [] 
                     }
                 ],
                 "summary": "Upload a file to a folder",
@@ -107,7 +103,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "format": "uuid"
+                            "format": "number"
                         }
                     }
                 ],
@@ -150,9 +146,7 @@
             "post": {
                 "security": [
                     {
-                        "bearerAuth": [
-                            "x-propacity"
-                        ]
+                        "ApiKeyAuth": [] 
                     }
                 ],
                 "summary": "Update the name of a file",
@@ -203,9 +197,7 @@
             "post": {
                 "security": [
                     {
-                        "bearerAuth": [
-                            "x-propacity"
-                        ]
+                        "ApiKeyAuth": [] 
                     }
                 ],
                 "summary": "Move a file to a different folder",
@@ -257,9 +249,7 @@
             "delete": {
                 "security": [
                     {
-                        "bearerAuth": [
-                            "x-propacity"
-                        ]
+                        "ApiKeyAuth": [] 
                     }
                 ],
                 "summary": "Delete a file",
@@ -395,11 +385,11 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
+            "ApiKeyAuth": {
+            "type":"apiKey",
+            "in": "header",
+            "name": "x-propacity"
         }
     }
+}
 }
